@@ -1,21 +1,36 @@
 import { React, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
-import { Container, Button, Row, Col, Form, FormControl } from "react-bootstrap";
+import {
+  Container,
+  Button,
+  Row,
+  Col,
+  Form,
+  FormControl,
+} from "react-bootstrap";
+import { toast } from "react-toastify";
+import { useUser } from "../../contexts/userContext";
 
 export default function Login() {
+
+  const {login} = useUser();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const onLoginClick = useCallback(() => {
-    console.log("Login " + username + " " + password);
+  const onLoginClick = useCallback(async (e) => {
+    e.preventDefault();
+
+    const userData = { username: username, password: password };
+    await login(userData, "/");
   }
-    , [username, password]);
+    , [username, password, login]);
 
   return (
     <Container>
       <Row>
         <Col md="4">
-          <h1>Register</h1>
+          <h1>Login</h1>
           <Form>
             <Form.Group controlId="usernameId">
               <Form.Label>User name</Form.Label>

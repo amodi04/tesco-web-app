@@ -1,13 +1,34 @@
 import { React, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { Container, Button, Row, Col, Form, FormControl } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { useUser } from "../../contexts/userContext";
 
 export default function Register() {
+
+  const {register} = useUser();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const onRegisterClick = useCallback(() => {
-    console.log("Register " + username + " " + password);
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const onRegisterClick = useCallback(async (e) => {
+    e.preventDefault();
+
+    const userData = { username: username, password: password };
+    const result = await register(userData);
+    if (result === true) {
+      toast.success("Account for " + userData.username + " created successfully. Please login.");
+      return;
+    } 
+    if (result.response.data.username) {
+      setUsernameError(result.response.data.username);
+    }
+    if (result.response.data.password) {
+      setPasswordError(result.response.data.password);
+    }
   }
     , [username, password]);
 
@@ -24,9 +45,13 @@ export default function Register() {
                 name="username"
                 placeholder="Enter user name"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                isInvalid={usernameError}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  setUsernameError('');
+                }}
               />
-              <FormControl.Feedback type="invalid"></FormControl.Feedback>
+              <FormControl.Feedback type="invalid">{usernameError}</FormControl.Feedback>
             </Form.Group>
 
             <Form.Group controlId="passwordId">
@@ -36,9 +61,13 @@ export default function Register() {
                 name="password"
                 placeholder="Enter password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                isInvalid={passwordError}
+                required
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setPasswordError('');
+                }}              />
+              <Form.Control.Feedback type="invalid">{passwordError}</Form.Control.Feedback>
             </Form.Group>
           </Form>
           <Button color="primary" onClick={onRegisterClick}>
