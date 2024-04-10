@@ -1,9 +1,8 @@
 import { React, createContext, useState, useContext, useCallback, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { setAxiosAuthToken, toastOnError } from "../utils/utils";
+import { setAxiosAuthToken, toastOnError, isEmpty } from "../utils/utils";
 import { useNavigate } from "react-router-dom";
-import {isEmpty} from "./utils/utils";
 
 const UserContext = createContext({});
 

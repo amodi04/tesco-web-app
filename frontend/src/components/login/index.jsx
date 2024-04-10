@@ -1,5 +1,5 @@
-import { React, useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { React, useCallback, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Container,
   Button,
@@ -8,21 +8,30 @@ import {
   Form,
   FormControl,
 } from "react-bootstrap";
-import { toast } from "react-toastify";
 import { useUser } from "../../contexts/userContext";
+import { useSearchParams } from "react-router-dom";
 
 export default function Login() {
 
-  const {login} = useUser();
+  const {login, isAuthenticated} = useUser();
+  const [searchParams] = useSearchParams();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const nav = useNavigate();
+
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     nav("/dashboard");
+  //   }
+  // }, []);
 
   const onLoginClick = useCallback(async (e) => {
     e.preventDefault();
 
     const userData = { username: username, password: password };
-    await login(userData, "/");
+    await login(userData, searchParams.get("next") || "/");
   }
     , [username, password, login]);
 

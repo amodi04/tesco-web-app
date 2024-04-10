@@ -8,6 +8,7 @@ import Login from "./components/login/index";
 import Dashboard from "./components/dashboard/index";
 
 import axios from "axios";
+import RequireAuth from "./utils/RequireAuth";
 axios.defaults.baseURL = "http://127.0.0.1:8000";
 
 class App extends Component {
@@ -20,7 +21,9 @@ class App extends Component {
               <Route path="/" element={<Home />} />
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route element={<RequireAuth />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+              </Route>
             </Routes>
             <ToastContainer hideProgressBar={true} newestOnTop={true} />
           </UserProvider>
