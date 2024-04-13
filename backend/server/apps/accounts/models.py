@@ -13,9 +13,8 @@ class Group(models.Model):
     
 
 class UserGroup(models.Model):
-    # Composite key of user and group
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.user) + " " + str(self.group)
+        return self.user.username
